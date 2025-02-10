@@ -1,68 +1,38 @@
+// The datasource block specifies the database provider and connection details
+datasource db {
+  provider = "postgresql"  // You can change this if you're using a different database (e.g., mysql)
+  url      = env("DATABASE_URL")  // This reads the database connection URL from your .env file
+}
+
 generator client {
   provider = "prisma-client-js"
 }
 
-datasource db {
-  provider = "postgresql"
-  url      = env("DATABASE_URL")
+model users {
+  id        String   @id @default(dbgenerated("uuid_generate_v4()"))
+  email     String   @unique
+  password  String
+  username  String
+  role      String
+  created_at DateTime? @default(now())
+  results   results[] // Reverse relation for the `results` model
 }
 
 model leaderboard {
-  id      String  @id @default(dbgenerated("gen_random_uuid()")) @db.Uuid
-  quiz_id String  @db.Uuid
-  user_id String  @db.Uuid
-  score   Int
-  rank    Int?
-  quizzes quizzes @relation(fields: [quiz_id], references: [id], onDelete: NoAction, onUpdate: NoAction)
-  users   users   @relation(fields: [user_id], references: [id], onDelete: NoAction, onUpdate: NoAction)
+  id      String @id @default(dbgenerated("public.gen_random_uuid()"))
 }
 
-model questions {
-  id             String  @id @default(dbgenerated("gen_random_uuid()")) @db.Uuid
-  quiz_id        String  @db.Uuid
-  text           String
-  options        Json    @db.Json
-  correct_answer Json    @db.Json
-  media_url      String?
-  quizzes        quizzes @relation(fields: [quiz_id], references: [id], onDelete: NoAction, onUpdate: NoAction)
-}
-
-/// This table contains check constraints and requires additional setup for migrations. Visit https://pris.ly/d/check-constraints for more info.
 model quizzes {
-  id          String        @id @default(dbgenerated("gen_random_uuid()")) @db.Uuid
-  title       String        @db.VarChar(255)
-  description String?
-  creator_id  String        @db.Uuid
-  settings    Json?         @db.Json
-  status      String        @db.VarChar(50)
-  created_at  DateTime?     @default(now()) @db.Timestamp(6)
-  leaderboard leaderboard[]
-  questions   questions[]
-  users       users         @relation(fields: [creator_id], references: [id], onDelete: NoAction, onUpdate: NoAction)
-  results     results[]
+  id          String   @id @default(dbgenerated("uuid_generate_v4()"))
+  description String
+  created_at  DateTime @default(now())
+  results     results[] // Reverse relation for the `results` model
 }
 
 model results {
-  id         String    @id @default(dbgenerated("gen_random_uuid()")) @db.Uuid
-  user_id    String    @db.Uuid
-  quiz_id    String    @db.Uuid
-  score      Int
-  answers    Json      @db.Json
-  time_taken Int?
-  created_at DateTime? @default(now()) @db.Timestamp(6)
-  quizzes    quizzes   @relation(fields: [quiz_id], references: [id], onDelete: NoAction, onUpdate: NoAction)
-  users      users     @relation(fields: [user_id], references: [id], onDelete: NoAction, onUpdate: NoAction)
-}
-
-/// This table contains check constraints and requires additional setup for migrations. Visit https://pris.ly/d/check-constraints for more info.
-model users {
-  id          String        @id @default(dbgenerated("gen_random_uuid()")) @db.Uuid
-  email       String        @unique @db.VarChar(255)
-  password    String        @db.VarChar(255)
-  username    String        @db.VarChar(100)
-  role        String        @db.VarChar(50)
-  created_at  DateTime?     @default(now()) @db.Timestamp(6)
-  leaderboard leaderboard[]
-  quizzes     quizzes[]
-  results     results[]
+  id          String   @id @default(dbgenerated("uuid_generate_v4()"))
+  user_id     String
+  quiz_id     String
+  user        users    @relation(fields: [user_id], references: [id])
+  quiz        quizzes  @relation(fields: [quiz_id], references: [id])
 }
