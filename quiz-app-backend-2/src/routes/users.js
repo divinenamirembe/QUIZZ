@@ -1,31 +1,12 @@
 import express from 'express';
-import { getAllUsers, createUser, getUserById, updateUser, deleteUser } from '../controllers/userController.js';
+import {registerUser, loginUser, createQuiz} from '../userAuthentication/authController.js';
+import { authenticateToken } from '../userAuthentication/authMiddleware.js';
+
 
 const router = express.Router();
 
-router.get('/', getAllUsers);
-router.post('/', createUser);
-router.get('/:id', getUserById);
-router.put('/:id', updateUser);
-router.delete('/:id', deleteUser);
+router.post('/register', registerUser);
+router.post('/login', loginUser);
+router.post('/quizzes', authenticateToken, createQuiz);
 
 export default router;
-
-
-
-
-
-
-/*
-
-// src/routes/users.js
-import express from 'express';
-
-const router = express.Router();
-
-router.get('/', (req, res) => {
-  res.send('Users route is working!');
-});
-
-export default router;
-*/
