@@ -1,23 +1,16 @@
-import dotenv from 'dotenv';
-import pkg from 'pg';
+import knex from 'knex';
+import knexConfig from '../knexfile.cjs'; // Use default import for CommonJS module
 
-// Load environment variables from .env file
-dotenv.config();
+// Initialize Knex instance using knexConfig for the development environment
+const knexInstance = knex(knexConfig.development);
 
-const { Client } = pkg;
-
-const client = new Client({
-  connectionString: process.env.DATABASE_URL,
-});
-
-// Connect to the database
-const connect = async () => {
+const testDbConnection = async () => {
   try {
-    await client.connect();
-    console.log('Connected to the PostgreSQL database');
+    const result = await knexInstance.raw('SELECT NOW()');
+    console.log('Database connection successful. Server time:', result.rows[0].now);
   } catch (err) {
-    console.error('Error connecting to the database', err.stack);
+    console.error('Database test query failed:', err.message);
   }
 };
 
-export { connect, client };
+export { knexInstance, testDbConnection };
