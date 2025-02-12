@@ -4,6 +4,7 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Quiz Setup</title>
+    <link href="https://maxcdn.bootstrapcdn.com/bootstrap/4.5.2/css/bootstrap.min.css" rel="stylesheet">
     <style>
         * {
             margin: 0;
@@ -15,22 +16,29 @@
         body {
             display: flex;
             height: 100vh;
-            background:whitesmoke;
+            background: whitesmoke;
             transition: background 0.3s, color 0.3s;
         }
         .sidebar {
             width: 250px;
+            min-height: 100vh;
             background: #0033cc;
             color: white;
             padding: 20px;
             display: flex;
             flex-direction: column;
+            position: fixed;
+            top: 0;
+            left: 0;
             transition: background 0.3s, color 0.3s;
         }
         .logo {
             font-size: 24px;
             font-weight: bold;
             margin-bottom: 20px;
+        }
+        .nav-links {
+            flex-grow: 1;
         }
         .nav-links a {
             display: flex;
@@ -43,17 +51,8 @@
             border-radius: 5px;
             transition: background 0.3s, color 0.3s;
         }
-        /* this has to be added on all the pages literally */
         .nav-links a:hover {
-            display: flex;
-            align-items: center;
-            padding: 10px;
-            margin-bottom: 10px;
-            text-decoration: none;
-            color: white;
             background: #3450a2;
-            border-radius: 5px;
-            transition: background 0.3s, color 0.3s;
         } 
         .nav-links a.active {
             background: #ffcc00;
@@ -61,6 +60,8 @@
         }
         .main-content {
             flex: 1;
+            margin-left: 250px;
+            padding: 20px;
         }
         .top-bar {
             display: flex;
@@ -73,7 +74,7 @@
         }
         .quizForm {
             width: 100%;
-            background-color:  #748ef4;
+            background-color: #748ef4;
             padding: 10px;
         }
         .form-group {
@@ -84,8 +85,7 @@
             display: block;
             margin-bottom: 5px;
         }
-        /* .form-group textarea, .form-group select*/ 
-        .form-control{ 
+        .form-control { 
             width: 100%;
             padding: 5px;
             border: 1px solid #ccc;
@@ -113,14 +113,13 @@
             margin-top: 20px;
             font-size: 18px;
             color: #28a745;
-            animation: fadeOut 3s forwards
+            animation: fadeOut 3s forwards;
         }
         .question {
             padding: 15px;
             border-radius: 4px;
             margin-bottom: 10px;
         }
-    
         .question .form-group {
             margin-bottom: 10px;
         }
@@ -129,7 +128,7 @@
             margin-right: 10px;
         }
         #questionsSection {
-            font-family:'Gill Sans', 'Gill Sans MT', Calibri, 'Trebuchet MS', sans-serif;
+            font-family: 'Gill Sans', 'Gill Sans MT', Calibri, 'Trebuchet MS', sans-serif;
             color: whitesmoke;
             width: 100%;
             background-color: rgba(128, 0, 128, 0.265);
@@ -149,21 +148,23 @@
             border-radius: 4px;
             cursor: pointer;
         }
-    .btn-add {
-        margin: 20px;
-        background-color:  #c63fc6;
-        color: white;
-        text-align: center; 
-        padding: 5px;
-        border-radius: 10px;
-    }
-    .btn-save {
-        background-color:  #c994c9;
-        color: white;
-        text-align: center;
-        padding: 5px;
-        border-radius: 10px; 
-    }
+        .btn-add {
+            margin: 15px;
+            background-color: #c63fc6;
+            color: white;
+            text-align: center; 
+            padding: 10px;
+            border: 1px solid #c63fc6;
+            border-radius: 10px;
+        }
+        .btn-save {
+            background-color: #c994c9;
+            border: 1px solid #c994c9;
+            color: white;
+            text-align: center;
+            padding: 10px;
+            border-radius: 10px; 
+        }
         .dark-mode {
             background: #333;
             color: #fff;
@@ -194,7 +195,6 @@
             margin-bottom: 10px;
             color: #222;
         }
-
     </style>
 </head>
 <body>
@@ -216,136 +216,150 @@
             <span></span>
             <button class="dark-mode-toggle" onclick="toggleDarkMode()">🌙</button>
         </div>
-            <form id="quizForm" class="quizForm">
-                <div class="form-group">
-                    <label for="quizTitle">Quiz Title</label>
-                    <input type="text" class="form-control" id="quizTitle" placeholder="Enter quiz title" required>
-                </div>
-                <div class="form-group">
-                    <label for="quizTitle">Quiz Type</label>
-                    <input type="text" class="form-control" id="quizType" placeholder="Enter quiz type which has been selected" required>
-                </div>
-                <div class="form-group">
-                    <label for="quizDescription">Quiz Description</label>
-                    <textarea class="form-control" id="quizDescription" rows="3" placeholder="Enter quiz description" required></textarea>
-                </div>
-                <div class="form-group">
-                    <label for="enableProgress">Enable Progress Indicator?</label>
-                    <input type="checkbox" id="enableProgress"> Yes
-                </div>
-                <div class="form-group">
-                    <label for="timer">Set Timer (seconds)</label>
-                    <input type="number" class="form-control" id="timer" placeholder="Optional">
-                </div>
-                <div id="questionsSection">
-                    <h3>Questions</h3>
-                </div>
-                <button type="button" class="btn-add">Add Question</button>
-                <button type="submit" class="btn-save">Save Quiz</button>
-            </form>
-            <div id="confirmationMessage" class="alert alert-success mt-3" style="display: none;">Quiz saved successfully!</div>
-        </div>
+        <form id="quizForm" class="quizForm">
+            <div class="form-group">
+                <label for="quizTitle">Quiz Title</label>
+                <input type="text" class="form-control" id="quizTitle" placeholder="Enter quiz title" required>
+            </div>
+            <div class="form-group">
+                <label for="quizType">Quiz Type</label>
+                <input type="text" class="form-control" id="quizType" placeholder="Enter quiz type which has been selected" required>
+            </div>
+            <div class="form-group">
+                <label for="quizDescription">Quiz Description</label>
+                <textarea class="form-control" id="quizDescription" rows="3" placeholder="Enter quiz description" required></textarea>
+            </div>
+            <div class="form-group">
+                <label for="enableProgress">Enable Progress Indicator?</label>
+                <input type="checkbox" id="enableProgress"> Yes
+            </div>
+            <div class="form-group">
+                <label for="timer">Set Timer (seconds)</label>
+                <input type="number" class="form-control" id="timer" placeholder="Optional">
+            </div>
+            <div id="questionsSection">
+                <h3>Questions</h3>
+            </div>
+            <button type="button" class="btn-add">Add Question</button>
+            <button type="submit" class="btn-save">Save Quiz</button>
+        </form>
+        <div id="confirmationMessage" class="alert alert-success mt-3" style="display: none;">Quiz saved successfully!</div>
     </div>
+    <template id="questionTemplate">
+        <div class="question">
+            <div class="form-group">
+                <label for="questionText">Question</label>
+                <input type="text" class="form-control questionText" placeholder="Enter question" required>
+            </div>
+            <div class="form-group">
+                <label for="questionType">Question Type</label>
+                <select class="form-control questionType" onchange="updateAnswerInput(this)">
+                    <option value="text">Text</option>
+                    <option value="image">Image</option>
+                    <option value="multipleChoice">Multiple Choice</option>
+                    <option value="trueFalse">True/False</option>
+                </select>
+            </div>
+            <div class="form-group answerSection">
+                <!-- Answer options will be dynamically added here -->
+            </div>
+            <button type="button" class="btn btn-warning" onclick="editQuestion(this)">Edit Question</button>
+            <button type="button" class="btn btn-danger" onclick="deleteQuestion(this)">Delete Question</button>
+        </div>
+    </template>
     <script>
-        // function addQuestion() {
-        //     const questionTemplate = document.getElementById('questionSection').content.cloneNode(true);
-        //     document.getElementById('questionsSection').appendChild(questionTemplate);
-        // }
+        function toggleDarkMode() {
+            document.body.classList.toggle("dark-mode");
+            const darkModeToggle = document.querySelector('.dark-mode-toggle');
+            if (document.body.classList.contains('dark-mode')) {
+                darkModeToggle.textContent = '☀️';
+            } else {
+                darkModeToggle.textContent = '🌙';
+            }
+        }
 
-        // function updateAnswerInput(selectElement) {
-        //     const questionContainer = selectElement.closest('.question');
-        //     const answerSection = questionContainer.querySelector('.answerSection');
-        //     answerSection.innerHTML = '';
+        document.addEventListener("DOMContentLoaded", function () {
+            const quizForm = document.getElementById("quizForm");
+            const questionsSection = document.getElementById("questionsSection");
+            const questionTemplate = document.getElementById("questionTemplate").content;
+            const confirmationMessage = document.getElementById("confirmationMessage");
 
-        //     if (selectElement.value === 'multipleChoice') {
-        //         for (let i = 1; i <= 4; i++) {
-        //             const optionContainer = document.createElement('div');
-        //             optionContainer.className = 'form-check my-2';
+            document.querySelector(".btn-add").addEventListener("click", function () {
+                addQuestion();
+            });
 
-        //             const input = document.createElement('input');
-        //             input.type = 'text';
-        //             input.className = 'form-control my-2';
-        //             input.placeholder = `Option ${i}`;
-        //             answerSection.appendChild(input);
+            quizForm.addEventListener("submit", function (event) {
+                event.preventDefault();
+                saveQuiz();
+            });
 
-        //             const radio = document.createElement('input');
-        //             radio.type = 'radio';
-        //             radio.name = 'correctAnswer';
-        //             radio.value = `Option ${i}`;
-        //             radio.className = 'form-check-input';
+            function addQuestion() {
+                const questionClone = document.importNode(questionTemplate, true);
+                questionsSection.appendChild(questionClone);
+            }
 
-        //             const label = document.createElement('label');
-        //             label.className = 'form-check-label';
-        //             label.textContent = 'Correct Answer';
+            function deleteQuestion(button) {
+                button.closest(".question").remove();
+            }
 
-        //             optionContainer.appendChild(input);
-        //             optionContainer.appendChild(radio);
-        //             optionContainer.appendChild(label);
-        //             answerSection.appendChild(optionContainer);
-        //         }
-        //     } else if (selectElement.value === 'trueFalse') {
-        //         const trueOption = document.createElement('div');
-        //         trueOption.className = 'form-check my-2';
-        //         trueOption.innerHTML = '<input class="form-check-input" type="radio" name="trueFalse" value="true"> <label class="form-check-label">True</label>';
-        //         answerSection.appendChild(trueOption);
+            function editQuestion(button) {
+                const question = button.closest(".question");
+                const questionText = question.querySelector(".questionText");
+                const questionType = question.querySelector(".questionType");
+                const answerSection = question.querySelector(".answerSection");
 
-        //         const falseOption = document.createElement('div');
-        //         falseOption.className = 'form-check my-2';
-        //         falseOption.innerHTML = '<input class="form-check-input" type="radio" name="trueFalse" value="false"> <label class="form-check-label">False</label>';
-        //         answerSection.appendChild(falseOption);
-        //     } else {
-        //         const correctAnswerLabel = document.createElement('label');
-        //         correctAnswerLabel.textContent = 'Correct Answer';
+                // Enable editing of the question text and type
+                questionText.disabled = false;
+                questionType.disabled = false;
 
-        //         const correctAnswerInput = document.createElement('input');
-        //         correctAnswerInput.type = 'text';
-        //         correctAnswerInput.className = 'form-control my-2';
-        //         correctAnswerInput.placeholder = 'Enter the correct answer';
-        //     }
-        // }
+                // Enable editing of the answer options
+                const answerInputs = answerSection.querySelectorAll("input");
+                answerInputs.forEach(input => input.disabled = false);
 
-        // function editQuestion(buttonElement) {
-        //     const questionContainer = buttonElement.closest('.question');
-        //     const questionText = questionContainer.querySelector('.questionText').value;
-        //     const questionType = questionContainer.querySelector('.questionType').value;
+                // Focus on the question text input
+                questionText.focus();
+            }
 
-        //     console.log('Edit Question:', { questionText, questionType });
-        // }
+            function updateAnswerInput(select) {
+                const answerSection = select.closest(".question").querySelector(".answerSection");
+                answerSection.innerHTML = "";
 
-        // function deleteQuestion(buttonElement) {
-        //     const questionContainer = buttonElement.closest('.question');
-        //     questionContainer.remove();
-        // }
+                if (select.value === "multipleChoice") {
+                    for (let i = 1; i <= 4; i++) {
+                        const input = document.createElement("input");
+                        input.type = "text";
+                        input.className = "form-control mt-2";
+                        input.placeholder = `Option ${i}`;
+                        answerSection.appendChild(input);
+                    }
+                } else if (select.value === "trueFalse") {
+                    answerSection.innerHTML = `
+                        <label><input type="radio" name="trueFalse" value="true"> True</label>
+                        <label><input type="radio" name="trueFalse" value="false"> False</label>
+                    `;
+                } else if (select.value === "image") {
+                    const input = document.createElement("input");
+                    input.type = "file";
+                    input.className = "form-control";
+                    answerSection.appendChild(input);
+                } else if (select.value === "text") {
+                    const input = document.createElement("input");
+                    input.type = "text";
+                    input.className = "form-control mt-2";
+                    input.placeholder = "Enter the correct answer";
+                    answerSection.appendChild(input);
+                }
+            }
 
-        // document.getElementById('quizForm').addEventListener('submit', function (event) {
-        //     event.preventDefault();
-
-        //     // Collect quiz data
-        // const quizData = {
-        //         title: document.getElementById('quizTitle').value,
-        //         description: document.getElementById('quizDescription').value,
-        //         enableProgress: document.getElementById('enableProgress').checked,
-        //         timer: parseInt(document.getElementById('timer').value) || null,
-        //         pointsPerQuestion: parseInt(document.getElementById('pointsPerQuestion').value) || null,
-        //         questions: []
-        //     };
-
-        //     const questions = document.querySelectorAll('#questionsSection .question');
-        //     questions.forEach(question => {
-        //         const questionText = question.querySelector('.questionText').value;
-        //         const questionType = question.querySelector('.questionType').value;
-        //         const answers = Array.from(question.querySelectorAll('.answerSection input')).map(input => input.value);
-
-        //         quizData.questions.push({ questionText, questionType, answers });
-        //     });
-
-        //     console.log('Quiz Data:', quizData);
-        //     document.getElementById('confirmationMessage').style.display = 'block';
-        // });
+            function saveQuiz() {
+                confirmationMessage.style.display = "block";
+                setTimeout(() => confirmationMessage.style.display = "none", 3000);
+            }
+        });
     </script>
 
-    <!-- <script src="https://code.jquery.com/jquery-3.5.1.slim.min.js"></script>
+    <script src="https://code.jquery.com/jquery-3.5.1.slim.min.js"></script>
     <script src="https://cdn.jsdelivr.net/npm/@popperjs/core@2.5.4/dist/umd/popper.min.js"></script>
-    <script src="https://maxcdn.bootstrapcdn.com/bootstrap/4.5.2/js/bootstrap.min.js"></script> -->
+    <script src="https://maxcdn.bootstrapcdn.com/bootstrap/4.5.2/js/bootstrap.min.js"></script>
 </body>
 </html>
