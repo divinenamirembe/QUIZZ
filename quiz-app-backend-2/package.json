@@ -14,7 +14,6 @@
   "type": "module",
   "description": "",
   "dependencies": {
-    "@prisma/client": "^6.3.1",
     "bcrypt": "^5.1.1",
     "body-parser": "^1.20.3",
     "cors": "^2.8.5",

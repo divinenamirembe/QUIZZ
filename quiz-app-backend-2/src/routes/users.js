@@ -1,6 +1,7 @@
 import express from 'express';
-import {registerUser, loginUser, createQuiz} from '../userAuthentication/authController.js';
+import {registerUser, loginUser} from '../userAuthentication/authController.js';
 import { authenticateToken } from '../userAuthentication/authMiddleware.js';
+import { createQuiz} from '../userAuthentication/authController.js'
 
 
 const router = express.Router();

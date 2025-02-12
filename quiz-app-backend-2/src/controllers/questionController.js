@@ -1,31 +1,13 @@
-import prisma from '../db.js';
+import { knexInstance } from '../db.js';
 
 // Get all questions
 export const getAllQuestions = async (req, res) => {
   try {
-    const questions = await prisma.questions.findMany();
-    res.json(questions);
+    const questions = await knexInstance('questions').select('*');
+    res.status(200).json(questions);
   } catch (error) {
-    res.status(500).json({ error: 'Error fetching questions' });
-  }
-};
-
-// Create a new question
-export const createQuestion = async (req, res) => {
-  const { quiz_id, text, options, correct_answer, media_url } = req.body;
-  try {
-    const newQuestion = await prisma.questions.create({
-      data: {
-        quiz_id,
-        text,
-        options,
-        correct_answer,
-        media_url,
-      },
-    });
-    res.status(201).json(newQuestion);
-  } catch (error) {
-    res.status(500).json({ error: 'Error creating question' });
+    console.error('Error fetching all questions:', error);
+    res.status(500).json({ error: 'Failed to fetch questions.' });
   }
 };
 
@@ -33,44 +15,85 @@ export const createQuestion = async (req, res) => {
 export const getQuestionById = async (req, res) => {
   const { id } = req.params;
   try {
-    const question = await prisma.questions.findUnique({
-      where: { id },
-    });
-
+    const question = await knexInstance('questions').where({ id }).first();
     if (!question) {
-      return res.status(404).json({ error: 'Question not found' });
+      return res.status(404).json({ error: 'Question not found.' });
     }
-    res.json(question);
+    res.status(200).json(question);
   } catch (error) {
-    res.status(500).json({ error: 'Error fetching question' });
+    console.error(`Error fetching question with ID ${id}:`, error);
+    res.status(500).json({ error: 'Failed to fetch the question.' });
   }
 };
+
+// Create a new question
+export const createQuestion = async (req, res) => {
+  const { text, quiz_id } = req.body;
+
+  try {
+    // Validate input
+    if (!text || !quiz_id) {
+      return res.status(400).json({ error: 'Question text and quiz ID are required.' });
+    }
+
+    // Ensure that quiz_id is a valid UUID
+    const uuidRegex = /^[0-9a-fA-F]{8}-[0-9a-fA-F]{4}-[0-9a-fA-F]{4}-[0-9a-fA-F]{4}-[0-9a-fA-F]{12}$/;
+    if (!uuidRegex.test(quiz_id)) {
+      return res.status(400).json({ error: 'Invalid quiz ID format. Must be a UUID.' });
+    }
+
+    // Insert question and retrieve the inserted row directly
+    const [newQuestion] = await knexInstance('questions')
+      .insert({ text, quiz_id })
+      .returning(['id', 'text', 'quiz_id']); // Return inserted fields directly
+
+    res.status(201).json(newQuestion);
+  } catch (error) {
+    console.error('Error creating a new question:', error.message || error);
+    res.status(500).json({ error: 'Failed to create the question.' });
+  }
+};
+
 
 // Update a question by ID
 export const updateQuestion = async (req, res) => {
   const { id } = req.params;
-  const { text, options, correct_answer, media_url } = req.body;
-  try {
-    const updatedQuestion = await prisma.questions.update({
-      where: { id },
-      data: { text, options, correct_answer, media_url },
-    });
+  const { text, quiz_id } = req.body;
 
-    res.json(updatedQuestion);
+  try {
+    if (!text && !quiz_id) {
+      return res.status(400).json({ error: 'At least one field (text or quiz_id) is required for update.' });
+    }
+
+    const updated = await knexInstance('questions')
+      .where({ id })
+      .update({ text, quiz_id }, ['id', 'text', 'quiz_id']);
+
+    if (updated.length === 0) {
+      return res.status(404).json({ error: 'Question not found.' });
+    }
+
+    res.status(200).json(updated[0]);
   } catch (error) {
-    res.status(500).json({ error: 'Error updating question' });
+    console.error(`Error updating question with ID ${id}:`, error);
+    res.status(500).json({ error: 'Failed to update the question.' });
   }
 };
 
 // Delete a question by ID
 export const deleteQuestion = async (req, res) => {
   const { id } = req.params;
+
   try {
-    const deletedQuestion = await prisma.questions.delete({
-      where: { id },
-    });
-    res.json(deletedQuestion);
+    const deletedRows = await knexInstance('questions').where({ id }).del();
+
+    if (deletedRows === 0) {
+      return res.status(404).json({ error: 'Question not found.' });
+    }
+
+    res.status(200).json({ message: 'Question deleted successfully.' });
   } catch (error) {
-    res.status(500).json({ error: 'Error deleting question' });
+    console.error(`Error deleting question with ID ${id}:`, error);
+    res.status(500).json({ error: 'Failed to delete the question.' });
   }
 };
