@@ -50,6 +50,14 @@
             display: block;
             margin: 5px 0;
         }
+        .forgot-password:hover {
+            font-size: 14px;
+            color: #4862d4;
+            text-decoration: underline;
+            display: block;
+            margin: 5px 0;
+            transition: 0.3s;
+        }
         button {
             width: 100%;
             padding: 12px;
@@ -96,13 +104,32 @@
         <h2 style="color: rgb(27, 27, 27);">Sign In</h2>
         <input type="email" placeholder="Email" required>
         <input type="password" placeholder="Password" required>
-        <a href="#" class="forgot-password">Forgot Password?</a>
-        <button>Sign In</button>
+        <a href="forgotpassword.html" class="forgot-password">Forgot Password?</a>
+        <button type="submit">Sign In</button>
         <hr>
         <span class="or-text">or</span>
-        <button class="google-signup">
+        <button class="google-signup" onclick="signInWithGoogle()">
             <img src="https://img.icons8.com/color/48/000000/google-logo.png">
             Sign In with Google
-    </div>
+        </button>
+        <script src="https://apis.google.com/js/platform.js" async defer></script>
+        <script>
+            function signInWithGoogle() {
+            gapi.load('auth2', function() {
+                var auth2 = gapi.auth2.init({
+                client_id: 'YOUR_CLIENT_ID.apps.googleusercontent.com',
+                });
+                auth2.signIn().then(function(googleUser) {
+                var profile = googleUser.getBasicProfile();
+                console.log('ID: ' + profile.getId());
+                console.log('Name: ' + profile.getName());
+                console.log('Image URL: ' + profile.getImageUrl());
+                console.log('Email: ' + profile.getEmail());
+                // You can now send this information to your server for further processing(backend team)
+                });
+            });
+            }
+        </script>
+        </div>
 </body>
 </html>
