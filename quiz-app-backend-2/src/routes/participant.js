@@ -1,16 +1,19 @@
 // src/routes/participantRoutes.js
 import express from 'express';
-import { joinQuiz, submitQuiz, getQuizParticipants } from '../controllers/participantController.js';
+import { joinQuiz, getQuizParticipants, getParticipantsByQuiz, checkIfUserJoined } from '../controllers/participantController.js';
 
 const router = express.Router();
 
 // Route for joining a quiz
 router.post('/join', joinQuiz);
 
-// Route for submitting a quiz score
-router.post('/submit', submitQuiz);
+
+
+router.post('/check', checkIfUserJoined);
 
 // Route for getting participants of a specific quiz
 router.get('/:quizId/participants', getQuizParticipants);
+
+router.get('/:quizId', getParticipantsByQuiz);
 
 export default router;
