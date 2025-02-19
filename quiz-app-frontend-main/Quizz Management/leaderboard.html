@@ -1,0 +1,176 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Leaderboards Page</title>
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+            font-family: Arial, sans-serif;
+        }
+        body {
+            display: flex;
+            height: 100vh;
+            background: #f8f9fa;
+            transition: background 0.3s, color 0.3s;
+        }
+        .dark-mode {
+            background: #121212;
+            color: white;
+        }
+        .sidebar {
+            width: 250px;
+            background: #0033cc;
+            color: white;
+            padding: 20px;
+            display: flex;
+            flex-direction: column;
+            transition: background 0.3s;
+        }
+        .logo {
+            font-size: 24px;
+            font-weight: bold;
+            margin-bottom: 20px;
+        }
+        .nav-links a {
+            display: flex;
+            align-items: center;
+            padding: 10px;
+            margin-bottom: 10px;
+            text-decoration: none;
+            color: white;
+            background: #002699;
+            border-radius: 5px;
+            transition: background 0.3s, color 0.3s;
+        }
+        .nav-links a.active {
+            background: #ffcc00;
+            color: black;
+        }
+        .main-content {
+            flex: 1;
+            padding: 20px;
+            transition: background 0.3s, color 0.3s;
+        }
+        .top-bar {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            padding: 10px;
+            background: white;
+            box-shadow: 0 2px 5px rgba(0, 0, 0, 0.1);
+            transition: background 0.3s;
+        }
+        .dark-mode .top-bar {
+            background: #1e1e1e;
+        }
+        .buttons {
+            display: flex;
+            align-items: center;
+            gap: 15px;
+        }
+        .create-btn, .participant-btn {
+            background: #0033cc;
+            color: white;
+            padding: 10px 20px;
+            border-radius: 5px;
+            text-decoration: none;
+        }
+        /* .content-box {
+            display: flex;
+            flex-direction: column;
+            justify-content: center;
+            align-items: center;
+            height: 80%;
+            border: 2px solid #ddd;
+            border-radius: 10px;
+            text-align: center;
+            background: white;
+            transition: background 0.3s, border-color 0.3s;
+        }
+        .dark-mode .content-box {
+            background: #222;
+            border-color: #444;
+        } */
+        .leaderboard-container {
+            padding: 20px;
+            background: white;
+            border-radius: 10px;
+            margin-top: 20px;
+            box-shadow: 0 2px 5px rgba(0, 0, 0, 0.1);
+        }
+        .dark-mode .leaderboard-container {
+            background: #222;
+        }
+        .dark-mode {
+            background: #333;
+            color: #fff;
+        }
+        .dark-mode .sidebar {
+            background: #222;
+        }
+        .dark-mode .nav-links a {
+            background: #444;
+            color: #fff;
+        }
+        .dark-mode .nav-links a.active {
+            background: #ffcc00;
+            color: black;
+        }
+        .dark-mode .top-bar {
+            background: #444;
+        }
+        .toggle-dark-mode {
+            cursor: pointer;
+            font-size: 20px;
+        }
+    </style>
+</head>
+<body>
+    <div class="sidebar">
+        <div class="logo">
+            <img src="quizzit.png" alt="QUIZIT Logo" style="width: 50%; height: 100%;">
+        </div>
+        <div class="nav-links">
+            <a href="homepage.html" class="active">Home</a>
+            <a href="createquiz.html">Create Quiz</a>
+            <!-- <a href="#">View Quiz</a> -->
+            <a href="results.html">Quiz Results</a>
+            <a href="leaderboard.html">Leaderboards</a>
+        </div>
+    </div>
+    <div class="main-content">
+        <div class="top-bar">
+            <h2>Leaderboard Page</h2>
+            <div class="buttons">
+                <span></span>
+                <span></span>
+                <span class="toggle-dark-mode">🌙</span>
+            </div>
+        </div>
+        <div class="leaderboard-container">
+            <!-- <h2 class="leaderboard-header">Quiz Results</h2> -->
+            <table class="leaderboard-table">
+                <thead>
+                    <tr>
+                        <th>Rank</th>
+                        <th>Username</th>
+                        <th>Score</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    <!-- data will be displayed here -->
+                </tbody>
+            </table>
+        </div>
+    </div>
+    <script>
+        document.querySelector('.toggle-dark-mode').addEventListener('click', function() {
+            document.body.classList.toggle('dark-mode');
+        });
+    </script>
+</body>
+</html>
