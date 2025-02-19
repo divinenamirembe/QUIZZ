@@ -1,0 +1,57 @@
+/* ✅ 1. Reset Styles (Removes default browser padding, margins) */
+* {
+  margin: 0;
+  padding: 0;
+  box-sizing: border-box;
+  font-family: "Arial", sans-serif;
+}
+
+/* ✅ 2. Global Color Variables */
+:root {
+  --primary: #FFB703;  /* Bright Yellow */
+  --secondary: #041697;  /* Deep Blue */
+  --accent: #B2BBFE;  /* Soft Blue */
+  --background: #DADEFF;  /* Light Blue */
+}
+
+/* ✅ 3. Body Styles */
+body {
+  background-color: var(--background);
+  color: var(--secondary);
+  padding: 20px;
+}
+
+/* ✅ 4. Utility Classes */
+.container {
+  max-width: 1200px;
+  margin: 0 auto;
+  padding: 20px;
+}
+
+.button {
+  background-color: var(--primary);
+  color: var(--secondary);
+  padding: 10px 20px;
+  font-size: 16px;
+  border: none;
+  border-radius: 5px;
+  cursor: pointer;
+}
+
+.button:hover {
+  background-color: var(--accent);
+  color: white;
+}
+
+.flex {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+
+.card {
+  background: white;
+  padding: 15px;
+  border-radius: 8px;
+  box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
+}

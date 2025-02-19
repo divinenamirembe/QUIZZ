@@ -1,14 +1,15 @@
-exports.up = async function(knex) {
-  await knex.schema.createTable('questions', (table) => {
-    table.uuid('id').primary().defaultTo(knex.raw('uuid_generate_v4()'));
-    table.uuid('quiz_id').references('id').inTable('quizzes').onDelete('CASCADE');
-    table.text('text').notNullable();
-    table.json('options').nullable();
-    table.json('correct_answer').nullable();
-    table.string('media_url').nullable();
+exports.up = function (knex) {
+  return knex.schema.createTable('questions', (table) => {
+    table.uuid('id').primary().defaultTo(knex.raw('gen_random_uuid()'));
+    table.uuid('quiz_id').notNullable().references('id').inTable('quizzes').onDelete('CASCADE');
+    table.string('question').notNullable();
+    table.jsonb('options').notNullable(); // Use jsonb for better performance and flexibility
+    table.string('correct_answer').notNullable();
+    table.string('image_url');
+    table.timestamps(true, true);
   });
 };
 
-exports.down = async function(knex) {
-  await knex.schema.dropTableIfExists('questions');
+exports.down = function (knex) {
+  return knex.schema.dropTable('questions');
 };

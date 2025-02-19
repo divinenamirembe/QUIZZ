@@ -1,0 +1,29 @@
+.create-quiz-container {
+  display: flex;
+}
+
+.menu {
+  width: 250px;
+  background-color: #041697;
+  color: white;
+  padding: 20px;
+  display: flex;
+  flex-direction: column;
+  gap: 10px;
+}
+
+.menu button {
+  background-color: #ffb703;
+  color: white;
+  padding: 10px;
+  border: none;
+  cursor: pointer;
+}
+
+.menu button:hover {
+  background-color: #b2bbfe;
+}
+
+.content {
+  flex: 1;
+}

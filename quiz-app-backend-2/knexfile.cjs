@@ -17,5 +17,8 @@ module.exports = {
     seeds: {
       directory: path.join(__dirname, 'src', 'seeds'),
     },
+    
+    debug: true, // Enable query debugging
   },
 };
+ 
