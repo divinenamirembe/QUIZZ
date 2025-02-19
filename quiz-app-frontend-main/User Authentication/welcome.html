@@ -3,80 +3,108 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Welcome to QuizzIT</title>
+    <link rel="icon" href="logo.png" type="image/x-icon">
+    <title>Quizzit Welcome</title>
     <style>
-        body {
+        * {
             margin: 0;
-            font-family: Arial, sans-serif;
+            padding: 0;
+            box-sizing: border-box;
+        }
+        body {
             display: flex;
             justify-content: center;
             align-items: center;
             height: 100vh;
-            background-color: #f3f4f6;
-            background: url('neon.jpg') no-repeat center center/cover;
-
+            background: #ccc;
+            background-image: url('stock-dark.jpg');
         }
-
         .container {
-            text-align: center;
-            padding: 20px;
-            border-radius: 10px;
-            background-color: #ffffff;
-            box-shadow: 0 4px 8px rgb(224, 8, 69);
-            width: 80%;
-            max-width: 600px;
-            margin: 50px auto;
-            ;
-        }
-
-        h1 {
-            font-size: 2.5rem;
-            color: #333333;
-        }
-
-        p {
-            font-size: 1.2rem;
-            color: #555555;
-            margin: 10px 0 20px;
-        }
-
-        .buttons {
             display: flex;
+            align-items: center;
+            width: 900px;
+            height: 400px;
+            border-radius: 10px;
+            overflow: hidden;
+            background: #fff;
+        }
+        .left {
+            flex: 1;
+            background: linear-gradient(135deg, #0033cc, #007bff);
+            border: 1px solid whites;
+            color: white;
+            padding: 50px;
+            display: flex;
+            flex-direction: column;
             justify-content: center;
-            gap: 15px;
         }
-
-        a {
-            display: inline-block;
-            padding: 10px 20px;
-            font-size: 1rem;
-            color: whitesmoke;
-            background-color: #1a0988;
-            border: 2px solid #1a0988;
-            border-radius: 5px;
+        .left h1 {
+            font-size: 28px;
+            font-weight: 600;
+            text-align: center;
+        }
+        .left p {
+            margin: 15px 0;
+            padding-bottom: 34px;
+            text-align: center;
+            font-size: 14px;
+            line-height: 1.6;
+        }
+        .left-btn, .right-btn {
+            padding: 10px;
+            padding-left: 20%;
+            padding-right: 20%;
             text-decoration: none;
-            cursor: pointer;
-            transition: border-color 0.3s;
+            font-weight: 600;
+            border-radius: 20px;
+            margin: 0% auto;
+            margin-top: 10px;
+            transition: 0.3s;
         }
-
-        a:hover {
-            border-color: #007BFF;
+        .left-btn{
+            background: white;
+            color: #0033cc;
         }
-
-        a:focus {
-            outline: none;
-            box-shadow: 0 0 5px rgba(0, 123, 255, 0.5);
+        .left img{
+            width: 95%;
+        }
+        .left-btn:hover {
+            background: #ddd;
+        }
+        .right {
+            flex: 1;
+            /*display: flex;
+            justify-content: center;
+            align-items: center;
+            background: #f8f9fa;*/
+            padding: 20px; 
+            text-align: center;
+        }
+        .right img {
+            width: 95%;
+            padding-bottom: 5.2px;
+        }
+        .right-btn {
+            background: #0033cc;
+            color: white;
+        }
+        .right-btn:hover {
+            background: #007bff;
         }
     </style>
 </head>
 <body>
     <div class="container">
-        <h1>Welcome to...</h1>
-        <img src="quizzit.png" alt="QuizzIT Logo">
-        <p>Sign up or log in to create and share quizzes with your friends!</p>
-        <div class="buttons">
-            <a href="signup.html">Sign Up</a>
-            <a href="signin.html">Sign In</a>
+        <div class="left">
+            <h1>Welcome to...</h1>
+            
+            <img src="quizzit.png" alt="QuizzIT Logo">
+            <p>Get ready to explore quizzes tailored just for you.</p>
+            <a href="#" class="left-btn">Sign Up</a>
+        </div>
+        <div class="right">
+            <img src="welcome.jpg" alt="Quiz Illustration">
+            <a href="#" class="right-btn">Sign Up</a>
         </div>
     </div>
 </body>

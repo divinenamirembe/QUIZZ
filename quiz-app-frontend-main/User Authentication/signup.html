@@ -3,6 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <link rel="icon" href="logo.png" type="image/x-icon">
     <title>Signup Page</title>
     <style>
         body {
@@ -10,36 +11,35 @@
             flex-direction: column;
             justify-content: center;
             background-color: skyblue;
-            background: url('neon.jpg') no-repeat center center/cover;
+            background-image: url('stock-dark.jpg');
             font-family: Arial, sans-serif;
             align-items: center;
             height: 100vh;
             margin: auto;
         }
         .signup-form img {
-            background-color:#d6edff ;
+            background-color:white ;
             padding: 9px;
             width: 50px;
             height: 50px;
-            margin-top: -40px;
             display: block;
             margin-left: auto;
             margin-right: auto;
-            border-radius: 20%;
+            border-radius: 26%;
+            border: 1px solid white;
         }
         .signup-form {
-            background: #fff;
-            padding: 20px;
-            border-radius: 8px;
-            box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
-            width: 300px;
-            margin-top: 70px;
+            background: rgba(255, 255, 255, 0.662);
+            padding: 30px;
+            border-radius: 10px;
+            box-shadow: 0 4px 10px rgba(0, 0, 0, 0.3);
+            text-align: center;
+            width: 400px;
         }
         .signup-form h2 {
             margin-bottom: 20px;
             text-align: center;
-            color:black;
-        }
+            color: rgb(27, 27, 27);        }
         .form-group {
             display: flex;
             flex-direction: column;
@@ -47,12 +47,12 @@
         }
         
         .form-group input {
-            width: 95%;
+            width: 90%;
             display: flex;
             flex-direction: column;
-            padding: 10px;
-            border: 1px solid #ddd;
-            border-radius: 6px;
+            padding: 12px;
+            border: none;
+            border-radius: 20px;
             margin-bottom: 20px;
         }
         .form-group input[type="password"] {
@@ -68,7 +68,7 @@
         }
         .strength-meter {
             height: 3px;
-            background: white;
+            background: rgba(135, 207, 235, 0.034);
             border-radius: 4px;
             margin-top: 5px; /* Adjusted to give space from the password input */
             margin-bottom: 15px; /* Added spacing from the next label */
@@ -84,21 +84,22 @@
         }
         .strength-meter[data-strength="strong"] {
             width: 100%;
-            background: green;
+            background: rgb(0, 197, 0);
         }
         .submit-btn {
             display: block;
             margin: 0 auto;
-            width: 50%;
+            width: 100%;
             padding: 10px;
-            background: #007bff;
+            background: #7886C7;
             border: none;
-            border-radius: 4px;
+            border-radius: 20px;
             color: white;
             font-size: 16px;
         }
         .submit-btn:hover {
-            background: skyblue;
+            background-color: #4862d4;
+            transition: background-color 0.3s;
         }
         
     </style>
