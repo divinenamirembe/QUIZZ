@@ -2,7 +2,14 @@ import express from 'express';
 import multer from 'multer';
 import fs from 'fs';
 import path from 'path';
-import { createQuestion, getAllQuestions, getQuestionById, updateQuestion, deleteQuestion, getQuestionsByQuizId } from '../controllers/questionController.js';
+import { 
+  createQuestion, 
+  getAllQuestions, 
+  getQuestionById, 
+  updateQuestion, 
+  deleteQuestion, 
+  getQuestionsByQuizId 
+} from '../controllers/questionController.js';
 
 // Ensure upload directory exists
 const uploadDir = path.join(process.cwd(), 'uploads');
@@ -25,10 +32,10 @@ const router = express.Router();
 
 // ✅ Use `upload.single('image')` to process **one image**
 router.get('/', getAllQuestions);
-router.post('/', upload.single('image'), createQuestion); // ✅ FIXED
+router.post('/', upload.single('image'), createQuestion); // ✅ Ensure image upload for creating a question
 router.get('/:quizId', getQuestionsByQuizId);
 router.get('/:id', getQuestionById);
-router.put('/:id', updateQuestion);
+router.put('/:id', upload.single('image'), updateQuestion); // ✅ FIXED: Ensure image upload for updating a question
 router.delete('/:id', deleteQuestion);
 
 export default router;
