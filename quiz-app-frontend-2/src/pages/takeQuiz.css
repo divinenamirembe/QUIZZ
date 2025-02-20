@@ -100,7 +100,7 @@
 }
 
 .quiz-item button {
-  padding: 8px 12px;
+  padding: 10px 12px;
   background-color: var(--primary);
   color: var(--secondary);
   font-size: 14px;
