@@ -3,13 +3,13 @@ import multer from 'multer';
 import fs from 'fs';
 import path from 'path';
 
-// Set up multer for file uploads (storing files on disk)
-const uploadDir = path.join(process.cwd(), 'uploads');
+
+
+const uploadDir = path.join(process.cwd(), "uploads");
 if (!fs.existsSync(uploadDir)) {
-  fs.mkdirSync(uploadDir, { recursive: true }); // ✅ Create directory if it doesn't exist
+  fs.mkdirSync(uploadDir, { recursive: true });
 }
 
-// ✅ Configure Multer for Single File Uploads
 const storage = multer.diskStorage({
   destination: (req, file, cb) => {
     cb(null, uploadDir);
@@ -17,7 +17,8 @@ const storage = multer.diskStorage({
   filename: (req, file, cb) => {
     cb(null, `${Date.now()}-${file.originalname}`);
   }
-});
+});;
+
 const upload = multer({ storage });
 
 // Get all questions
@@ -134,29 +135,76 @@ export const createQuestion = async (req, res) => {
 };
 
 // Update a question by ID
-export const updateQuestion = async (req, res) => {
-  const { id } = req.params;
-  const { question, quiz_id } = req.body;
 
+
+export const updateQuestion = async (req, res) => {
   try {
-    if (!question && !quiz_id) {
-      return res.status(400).json({ error: 'At least one field (text or quiz_id) is required for update.' });
+    const { id } = req.params;
+    const { question, quiz_id, correct_answer, number } = req.body;
+    let { options } = req.body;
+
+    console.log(`🔍 Incoming Update Request:\nID: ${id}\nBody:`, req.body);
+    console.log(`File:`, req.file);
+
+    // ✅ Ensure at least one field is provided for update
+    if (!question && !quiz_id && !options && !correct_answer && !number && !req.file) {
+      return res.status(400).json({ error: 'At least one field (question, quiz_id, options, correct_answer, number, or image) is required for update.' });
     }
 
+    // ✅ Ensure options is always a valid JSON object
+    if (typeof options === 'string') {
+      try {
+        options = JSON.parse(options);
+      } catch (error) {
+        console.error('❌ Invalid JSON format for options:', options);
+        return res.status(400).json({ error: 'Invalid JSON format in options field.' });
+      }
+    }
+
+    // ✅ Ensure correct_answer is a valid JSON value
+    const cleanedCorrectAnswer = JSON.stringify(correct_answer);
+
+    // ✅ Handle file upload
+    let imageUrl = null;
+    if (req.file) {
+      console.log('🔹 New file uploaded:', req.file.filename);
+      imageUrl = `/uploads/${req.file.filename}`;
+    }
+
+    // ✅ Ensure valid fields are updated
+    const updateData = {};
+
+    if (question !== undefined && question !== '') updateData.question = question;
+    if (quiz_id !== undefined && quiz_id !== '') updateData.quiz_id = quiz_id;
+    if (options !== undefined) updateData.options = JSON.stringify(options);  // ✅ Store as JSON
+    if (correct_answer !== undefined && correct_answer !== '') updateData.correct_answer = cleanedCorrectAnswer;
+    if (number !== undefined && number !== '') updateData.number = parseInt(number, 10);
+    if (imageUrl) updateData.image_url = imageUrl;
+
+    if (Object.keys(updateData).length === 0) {
+      return res.status(400).json({ error: 'At least one field (question, quiz_id, options, correct_answer, number, or image) is required for update.' });
+    }
+
+    console.log('📌 Updating question with data:', updateData);
+
+    // ✅ Perform the update
     const updated = await knexInstance('questions')
       .where({ id })
-      .update({ question, quiz_id }, ['id', 'question', 'quiz_id']);
+      .update(updateData, ['id', 'question', 'quiz_id', 'options', 'correct_answer', 'number', 'image_url']);
 
     if (updated.length === 0) {
       return res.status(404).json({ error: 'Question not found.' });
     }
 
-    res.status(200).json(updated[0]);
+    console.log('✅ Question successfully updated:', updated[0]);
+    return res.status(200).json(updated[0]);
   } catch (error) {
-    console.error(`Error updating question with ID ${id}:`, error);
-    res.status(500).json({ error: 'Failed to update the question.' });
+    console.error(`❌ Error updating question with ID ${id}:`, error);
+    return res.status(500).json({ error: 'Failed to update the question.' });
   }
 };
+
+
 
 // Delete a question by ID
 export const deleteQuestion = async (req, res) => {

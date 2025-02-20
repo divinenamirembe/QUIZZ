@@ -10,6 +10,7 @@ module.exports = {
       password: process.env.DB_PASSWORD,
       database: process.env.DB_NAME,
       port: process.env.DB_PORT,
+      ssl: { rejectUnauthorized: false }, // REQUIRED for Render
     },
     migrations: {
       directory: path.join(__dirname, 'src', 'migrations'),
@@ -17,8 +18,6 @@ module.exports = {
     seeds: {
       directory: path.join(__dirname, 'src', 'seeds'),
     },
-    
     debug: true, // Enable query debugging
   },
 };
- 

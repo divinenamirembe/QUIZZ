@@ -1,5 +1,6 @@
 import React, { useState, useEffect } from 'react';
 import { useNavigate } from 'react-router-dom';
+import './TakeQuiz.css'
 
 const TakeQuiz = () => {
   const [categories, setCategories] = useState([]);
@@ -72,26 +73,34 @@ const TakeQuiz = () => {
   const fetchQuizzesByCategory = async (category) => {
     setLoading(true);
     setSelectedCategory(category);
-
+    
     try {
+      console.log(`🔍 Fetching quizzes for category: ${category}`); // Debug log
+  
       const response = await fetch(`${process.env.REACT_APP_API_URL}/api/quizzes/category/${encodeURIComponent(category)}`);
       const data = await response.json();
-
-      console.log(`Quizzes for ${category}:`, data);
-
+  
+      console.log(`🔵 API Response for category '${category}':`, data); // ✅ Debugging log
+  
       if (!response.ok) {
-        throw new Error('Failed to fetch quizzes');
+        throw new Error("Failed to fetch quizzes");
       }
-
-      setQuizzes(data.quizzes);
+  
+      if (!data.quizzes || data.quizzes.length === 0) {
+        console.warn(`⚠️ No quizzes found in category '${category}'.`);
+      }
+  
+      setQuizzes(data.quizzes || []); // ✅ Ensure state updates
     } catch (error) {
-      console.error('Error fetching quizzes:', error);
-      setMessage(error.message);
+      console.error("❌ Error fetching quizzes:", error);
+      setMessage("Failed to fetch quizzes.");
+      setQuizzes([]); // Ensure UI updates correctly when there's an error
     } finally {
       setLoading(false);
     }
   };
-
+  
+  
   // Handle joining a quiz
   
 const navigate = useNavigate(); // ✅ Use React Router navigation
@@ -213,99 +222,168 @@ const fetchTakenQuizzes = async () => {
   }, [userId, token]);
 
 
+  const handleSearch = async (query) => {
+    setSearchQuery(query);
+  
+    if (query.trim() === "") {
+      setQuizzes([]); // Clear search results if input is empty
+      return;
+    }
+  
+    setLoading(true);
+  
+    try {
+      console.log(`🔍 Searching for available quizzes with: ${query}`);
+      
+      const response = await fetch(
+        `${process.env.REACT_APP_API_URL}/api/quizzes/search?query=${encodeURIComponent(query)}`,
+        {
+          headers: { Authorization: `Bearer ${token}` },
+        }
+      );
+      
+      const data = await response.json();
+  
+      if (!response.ok) {
+        throw new Error("Failed to fetch search results");
+      }
+  
+      console.log("🔵 Search Results for joinable quizzes:", data);
+  
+      setQuizzes(data.quizzes || []); // ✅ Update available quizzes
+    } catch (error) {
+      console.error("❌ Error searching quizzes:", error);
+      setMessage("Failed to fetch available quizzes.");
+      setQuizzes([]);
+    } finally {
+      setLoading(false);
+    }
+  };
+  
   // Filter quizzes based on search query
-  const filteredQuizzes = quizzes.filter((quiz) =>
-    quiz.title.toLowerCase().includes(searchQuery.toLowerCase())
-  );
+  const filteredQuizzes = quizzes;
 
+
+  
   return (
     <div className="take-quiz-container">
-      <h3>Welcome, {name || 'Guest'}</h3> {/* ✅ Displays extracted name from token */}
-      <div className="menu">
+      <h3>Welcome, {name || 'Guest'}</h3>
+  
+      <div className="quiz-layout">
+        {/* ✅ LEFT SECTION: Navigation */}
+        <div className="quiz-menu">
         <input
-          type="text"
-          placeholder="Search quizzes..."
-          value={searchQuery}
-          onChange={(e) => setSearchQuery(e.target.value)}
-          style={{ marginBottom: '10px', padding: '5px' }}
-        />
-        <button onClick={fetchCategories}>Categories</button>
-        <button onClick={() => setShowCategories(false)}>My Quizzes</button>
-      </div>
-
-      <div className="content">
-        {message && <p style={{ color: message.includes('Success') ? 'green' : 'red' }}>{message}</p>}
-
-        {/* Display Categories */}
-        {showCategories && (
-          <div>
-            <h3>Select a Category</h3>
-            {loading ? (
-              <p>Loading categories...</p>
-            ) : categories.length > 0 ? (
-              <div className="category-buttons">
-                {categories.map((category, index) => (
-                  <button key={index} onClick={() => fetchQuizzesByCategory(category)}>
-                    {category}
+            type="text"
+            placeholder="Search quizzes..."
+            value={searchQuery}
+            onChange={(e) => handleSearch(e.target.value)} // ✅ Calls API when typing
+            className="search-input"
+          />
+                    {/* ✅ Show quizzes ONLY when a search query exists */}
+        {searchQuery.trim() !== "" && (
+          filteredQuizzes.length > 0 ? (
+            <div className="quiz-list">
+              {filteredQuizzes.map((quiz) => (
+                <div key={quiz.id} className="quiz-item">
+                  <h4>{quiz.title}</h4>
+                  <button onClick={() => handleJoinQuiz(quiz.id)} className="join-button">
+                    Join Quiz
                   </button>
-                ))}
-              </div>
-            ) : (
-              <p>No categories found.</p>
-            )}
-          </div>
+                </div>
+              ))}
+            </div>
+          ) : (
+            <p>No quizzes found.</p>
+          )
         )}
 
-        {/* Display Quizzes Under Selected Category */}
-        {selectedCategory && (
-          <div>
-            <h3>Quizzes in "{selectedCategory}"</h3>
-            {loading ? (
-              <p>Loading quizzes...</p>
-            ) : filteredQuizzes.length > 0 ? (
-              <div className="quiz-list">
-                {filteredQuizzes.map((quiz) => (
-                  <div key={quiz.id} className="quiz-item">
-                    <h4>{quiz.title}</h4>
-                    <button onClick={() => handleJoinQuiz(quiz.id)}>Join Quiz</button>
-                  </div>
-                ))}
-              </div>
-            ) : (
-              <p>No quizzes available in this category.</p>
-            )}
-          </div>
-        )}
 
-        {/* Display Taken Quizzes */}
-        {!showCategories && !selectedCategory && (
-  <div>
-    <h3>My Quizzes</h3>
-    {loading ? (
-      <p>Loading your quiz history...</p>
-    ) : takenQuizzes.length > 0 ? (
-      <div className="taken-quiz-list">
-        {takenQuizzes.map((quiz, index) => (
-          <div key={index} className="quiz-item">
-            <h4>{quiz.quiz_title ? quiz.quiz_title : "Untitled Quiz"}</h4> {/* ✅ Display title */}
-            <p>Score: {quiz.score}%</p>
-            <p>Time Taken: {quiz.time_taken} min</p>
-            <button onClick={() => navigate(`/results/${quiz.quiz_id}`)}>
-              View Results
-            </button> {/* ✅ View Results Button */}
-          </div>
-        ))}
-      </div>
-    ) : (
-      <p>You haven't taken any quizzes yet.</p>
-    )}
-  </div>
-)}
+          <button onClick={fetchCategories} className="nav-button">Categories</button>
+          <button onClick={() => {
+              setShowCategories(false); 
+              setSelectedCategory(null); 
+              setQuizzes([]); // ✅ Clear any quizzes that were displayed before
+              fetchTakenQuizzes(); // ✅ Ensure taken quizzes are fetched & displayed
+            }} className="nav-button">
+              My Quizzes
+            </button>
 
-
+        </div>
+  
+        {/* ✅ RIGHT SECTION: Content */}
+        <div className="quiz-content">
+          {message && <p className="message">{message}</p>}
+  
+          {/* Display Categories */}
+          {showCategories && (
+            <div className="category-section">
+              <h3>Select a Category</h3>
+              {loading ? (
+                <p>Loading categories...</p>
+              ) : categories.length > 0 ? (
+                <div className="category-buttons">
+                  {categories.map((category, index) => (
+                    <button key={index} onClick={() => fetchQuizzesByCategory(category)} className="category-button">
+                      {category}
+                    </button>
+                  ))}
+                </div>
+              ) : (
+                <p>No categories found.</p>
+              )}
+            </div>
+          )}
+  
+          {/* Display Quizzes Under Selected Category */}
+          {selectedCategory && (
+            <div className="quiz-list-section">
+              <h3>Quizzes in "{selectedCategory}"</h3>
+              {loading ? (
+                <p>Loading quizzes...</p>
+              ) : filteredQuizzes.length > 0 ? (
+                <div className="quiz-list">
+                  {filteredQuizzes.map((quiz) => (
+                    <div key={quiz.id} className="quiz-item">
+                      <h4>{quiz.title}</h4>
+                      <button onClick={() => handleJoinQuiz(quiz.id)} className="join-button">Join Quiz</button>
+                    </div>
+                  ))}
+                </div>
+              ) : (
+                <p>No quizzes available in this category.</p>
+              )}
+            </div>
+          )}
+  
+          {/* Display Taken Quizzes */}
+          {!showCategories && !selectedCategory && (
+            <div className="taken-quiz-section">
+              <h3>My Quizzes</h3>
+              {loading ? (
+                <p>Loading your quiz history...</p>
+              ) : takenQuizzes.length > 0 ? (
+                <div className="taken-quiz-list">
+                  {takenQuizzes.map((quiz, index) => (
+                    <div key={index} className="quiz-item">
+                      <h4>{quiz.quiz_title || "Untitled Quiz"}</h4>
+                      <p>Score: {quiz.score}%</p>
+                      <p>Time Taken: {quiz.time_taken} min</p>
+                      <button onClick={() => navigate(`/results/${quiz.quiz_id}`)} className="view-results-button">
+                        View Results
+                      </button>
+                    </div>
+                  ))}
+                </div>
+              ) : (
+                <p>You haven't taken any quizzes yet.</p>
+              )}
+            </div>
+          )}
+        </div>
       </div>
     </div>
   );
+  
 };
 
 export default TakeQuiz;
