@@ -18,6 +18,7 @@ const Login = () => {
         headers: { 'Content-Type': 'application/json' },
         body: JSON.stringify({ email, password }),
       });
+      console.log("API URL:", process.env.REACT_APP_API_URL);
 
       const data = await response.json();
 

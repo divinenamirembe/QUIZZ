@@ -176,13 +176,14 @@ const handleJoinQuiz = async (quizId) => {
   }
 };
 
-
 const fetchTakenQuizzes = async () => {
   if (!userId) {
     console.warn("⚠️ User ID not found in localStorage");
     return;
   }
+
   setLoading(true);
+
   try {
     const response = await fetch(
       `${process.env.REACT_APP_API_URL}/api/results/user/${userId}`,
@@ -200,13 +201,37 @@ const fetchTakenQuizzes = async () => {
     const data = await response.json();
     console.log("🟢 Taken Quizzes API Response:", data); // ✅ Debug log
 
-    // ✅ Filter to only **keep the latest** attempt per quiz
-    const latestQuizzes = {};
+    if (!Array.isArray(data)) {
+      console.error("❌ API response is not an array:", data);
+      setMessage("Invalid response from server.");
+      return;
+    }
+
+    // ✅ Create a map to track the latest attempt per quiz
+    const latestQuizzesMap = {};
+
     data.forEach((quiz) => {
-      latestQuizzes[quiz.quiz_id] = quiz; // ✅ Overwrites older attempts with the latest
+      const quizId = quiz.quiz_id;
+      const attemptTime = new Date(quiz.timestamp).getTime(); // Ensure `timestamp` is valid
+
+      if (
+        !latestQuizzesMap[quizId] || 
+        attemptTime > new Date(latestQuizzesMap[quizId].timestamp).getTime()
+      ) {
+        latestQuizzesMap[quizId] = quiz; // ✅ Keep the latest attempt
+      }
     });
 
-    setTakenQuizzes(Object.values(latestQuizzes)); // ✅ Only latest attempts remain
+    const latestQuizzes = Object.values(latestQuizzesMap);
+    
+    // ✅ Sort by latest attempt timestamp (most recent first)
+    latestQuizzes.sort(
+      (a, b) => new Date(b.timestamp).getTime() - new Date(a.timestamp).getTime()
+    );
+
+    console.log("✅ Processed latest quizzes:", latestQuizzes);
+    
+    setTakenQuizzes(latestQuizzes); // ✅ Update state with latest attempts
   } catch (error) {
     console.error("❌ Error fetching taken quizzes:", error);
     setMessage("Failed to fetch your quiz history.");
@@ -215,11 +240,11 @@ const fetchTakenQuizzes = async () => {
   }
 };
 
-  
-  // ✅ Fetch quizzes the user has taken on component mount
-  useEffect(() => {
-    fetchTakenQuizzes();
-  }, [userId, token]);
+// ✅ Fetch quizzes the user has taken on component mount
+useEffect(() => {
+  fetchTakenQuizzes();
+}, [userId, token]);
+
 
 
   const handleSearch = async (query) => {
