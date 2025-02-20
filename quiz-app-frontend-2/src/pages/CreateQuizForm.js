@@ -1,51 +1,52 @@
-import React, { useState, useEffect } from 'react';
-import { useNavigate } from 'react-router-dom';
+import React, { useState, useEffect } from "react";
+import { useNavigate } from "react-router-dom";
+import "./CreateQuizForm.css"; // ✅ Import the CSS file
 
 const CreateQuizForm = () => {
   const [quizData, setQuizData] = useState({
-    title: '',
-    description: '',
+    title: "",
+    description: "",
     timer: 60,
-    category: '',
-    otherCategory: '',
+    category: "",
+    otherCategory: "",
   });
 
-  const [quizzes, setQuizzes] = useState([]); // Stores user's quizzes for edit/delete
-  const [selectedQuizId, setSelectedQuizId] = useState(null); // Stores the quiz being edited
+  const [quizzes, setQuizzes] = useState([]);
+  const [selectedQuizId, setSelectedQuizId] = useState(null);
   const [loading, setLoading] = useState(false);
-  const [error, setError] = useState('');
-  const [success, setSuccess] = useState('');
+  const [error, setError] = useState("");
+  const [success, setSuccess] = useState("");
   const navigate = useNavigate();
 
   useEffect(() => {
-    const token = localStorage.getItem('authToken');
+    const token = localStorage.getItem("authToken");
     if (!token) {
-      navigate('/login'); // Redirect if no token is found
+      navigate("/login");
     } else {
-      fetchUserQuizzes(); // Fetch quizzes on mount
+      fetchUserQuizzes();
     }
   }, [navigate]);
 
-  // ✅ Fetch quizzes created by the user
   const fetchUserQuizzes = async () => {
-    const token = localStorage.getItem('authToken');
-    const userId = localStorage.getItem('userId');
+    const token = localStorage.getItem("authToken");
+    const userId = localStorage.getItem("userId");
 
     if (!token || !userId) return;
 
     try {
-      const response = await fetch(`${process.env.REACT_APP_API_URL}/api/users/creator/${userId}`, {
-        headers: { Authorization: `Bearer ${token}` },
-      });
+      const response = await fetch(
+        `${process.env.REACT_APP_API_URL}/api/users/creator/${userId}`,
+        { headers: { Authorization: `Bearer ${token}` } }
+      );
 
       if (!response.ok) {
-        throw new Error('Failed to fetch quizzes');
+        throw new Error("Failed to fetch quizzes");
       }
 
       const data = await response.json();
       setQuizzes(data);
     } catch (error) {
-      console.error('Error fetching quizzes:', error);
+      console.error("Error fetching quizzes:", error);
     }
   };
 
@@ -54,150 +55,141 @@ const CreateQuizForm = () => {
   };
 
   const handleCategoryChange = (e) => {
-    setQuizData({ ...quizData, category: e.target.value, otherCategory: '' });
+    setQuizData({ ...quizData, category: e.target.value, otherCategory: "" });
   };
 
   const handleOtherCategoryChange = (e) => {
     setQuizData({ ...quizData, otherCategory: e.target.value });
   };
 
-  // ✅ Handle quiz creation or update
   const handleSubmit = async (e) => {
     e.preventDefault();
     setLoading(true);
-    setError('');
-    setSuccess('');
-  
+    setError("");
+    setSuccess("");
+
     if (!quizData.title || !quizData.description || !quizData.category) {
       setLoading(false);
-      setError('Please fill all required fields.');
+      setError("Please fill all required fields.");
       return;
     }
-  
-    const token = localStorage.getItem('authToken');
+
+    const token = localStorage.getItem("authToken");
     if (!token) {
       setLoading(false);
-      setError('Your session has expired. Please log in again.');
-      navigate('/login');
+      setError("Your session has expired. Please log in again.");
+      navigate("/login");
       return;
     }
-  
+
     try {
       let apiUrl = `${process.env.REACT_APP_API_URL}/api/users/quizzes`;
-      let method = 'POST';
-      let successMessage = 'Quiz created successfully!';
+      let method = "POST";
+      let successMessage = "Quiz created successfully!";
       let quizId = null;
-      let quizTitle = '';
-  
+      let quizTitle = "";
+
       if (selectedQuizId) {
         apiUrl = `${process.env.REACT_APP_API_URL}/api/quizzes/${selectedQuizId}`;
-        method = 'PUT';
-        successMessage = 'Quiz updated successfully!';
+        method = "PUT";
+        successMessage = "Quiz updated successfully!";
       }
-  
+
       const response = await fetch(apiUrl, {
         method,
         headers: {
-          'Content-Type': 'application/json',
+          "Content-Type": "application/json",
           Authorization: `Bearer ${token}`,
         },
         body: JSON.stringify({
           title: quizData.title,
           description: quizData.description,
           timer: quizData.timer,
-          category: quizData.category === 'Other' ? quizData.otherCategory : quizData.category,
+          category:
+            quizData.category === "Other" ? quizData.otherCategory : quizData.category,
         }),
       });
-  
+
       if (!response.ok) {
         throw new Error(`Error: ${response.statusText}`);
       }
-  
+
       const data = await response.json();
-      console.log("🟢 Full API Response:", data);
-  
-      // ✅ Handle both `POST` and `PUT` responses correctly
-      if (method === 'POST' && data.quiz && data.quiz.id) {
-        quizId = data.quiz.id; 
-        quizTitle = data.quiz.title || 'Untitled Quiz';
-      } else if (method === 'PUT' && data.id) {
-        quizId = data.id; 
-        quizTitle = data.title || 'Untitled Quiz';
+
+      if (method === "POST" && data.quiz && data.quiz.id) {
+        quizId = data.quiz.id;
+        quizTitle = data.quiz.title || "Untitled Quiz";
+      } else if (method === "PUT" && data.id) {
+        quizId = data.id;
+        quizTitle = data.title || "Untitled Quiz";
       } else {
-        console.error("❌ Error: Missing quiz ID in API response", data);
         setError("Failed to retrieve quiz ID. Please try again.");
         setLoading(false);
         return;
       }
-  
+
       setSuccess(successMessage);
-      setQuizData({ title: '', description: '', timer: 60, category: '', otherCategory: '' });
+      setQuizData({ title: "", description: "", timer: 60, category: "", otherCategory: "" });
       setSelectedQuizId(null);
-      fetchUserQuizzes(); // Refresh quizzes list
-  
-      // ✅ Navigate to Add Questions for both **newly created and updated** quizzes
-      sessionStorage.setItem('quizId', quizId);
-      sessionStorage.setItem('quizTitle', quizTitle);
-      console.log("🔄 Navigating to Add Questions Form for Quiz ID:", quizId);
-  
+      fetchUserQuizzes();
+
+      sessionStorage.setItem("quizId", quizId);
+      sessionStorage.setItem("quizTitle", quizTitle);
+
       navigate(`/add-questions/${quizId}`, { state: { quizTitle, quizId } });
-  
     } catch (error) {
-      console.error('❌ Error:', error);
-      setError('An error occurred. Please try again.');
+      console.error("❌ Error:", error);
+      setError("An error occurred. Please try again.");
     } finally {
       setLoading(false);
     }
   };
-  
-  
-  
-  // ✅ Load quiz for editing
+
   const handleEditQuiz = (quiz) => {
     setQuizData({
       title: quiz.title,
       description: quiz.description,
       timer: quiz.timer,
       category: quiz.category,
-      otherCategory: '',
+      otherCategory: "",
     });
     setSelectedQuizId(quiz.id);
-    setSuccess('');
-    setError('');
+    setSuccess("");
+    setError("");
   };
 
-  // ✅ Handle quiz deletion
   const handleDeleteQuiz = async (quizId) => {
-    if (!window.confirm('Are you sure you want to delete this quiz? This action cannot be undone.')) {
+    if (!window.confirm("Are you sure you want to delete this quiz?")) {
       return;
     }
 
-    const token = localStorage.getItem('authToken');
+    const token = localStorage.getItem("authToken");
     if (!token) return;
 
     try {
-      const response = await fetch(`${process.env.REACT_APP_API_URL}/api/quizzes/${quizId}`, {
-        method: 'DELETE',
-        headers: { Authorization: `Bearer ${token}` },
-      });
+      const response = await fetch(
+        `${process.env.REACT_APP_API_URL}/api/quizzes/${quizId}`,
+        { method: "DELETE", headers: { Authorization: `Bearer ${token}` } }
+      );
 
       if (!response.ok) {
-        throw new Error('Failed to delete quiz');
+        throw new Error("Failed to delete quiz");
       }
 
-      setSuccess('Quiz deleted successfully!');
-      fetchUserQuizzes(); // Refresh quiz list
+      setSuccess("Quiz deleted successfully!");
+      fetchUserQuizzes();
     } catch (error) {
-      console.error('Error deleting quiz:', error);
-      setError('Failed to delete quiz. Please try again.');
+      console.error("Error deleting quiz:", error);
+      setError("Failed to delete quiz. Please try again.");
     }
   };
 
   return (
     <div className="quiz-form">
-      <h3>{selectedQuizId ? 'Edit Quiz' : 'Create Quiz'}</h3>
+      <h3>{selectedQuizId ? "Edit Quiz" : "Create Quiz"}</h3>
       {error && <p className="error">{error}</p>}
       {success && <p className="success">{success}</p>}
+
       <form onSubmit={handleSubmit}>
         <div>
           <label htmlFor="title">Quiz Title</label>
@@ -225,25 +217,26 @@ const CreateQuizForm = () => {
           </select>
         </div>
 
-        {quizData.category === 'Other' && (
+        {quizData.category === "Other" && (
           <div>
-            <label htmlFor="otherCategory">Please specify the category</label>
+            <label htmlFor="otherCategory">Specify the category</label>
             <input type="text" id="otherCategory" name="otherCategory" value={quizData.otherCategory} onChange={handleOtherCategoryChange} required />
           </div>
         )}
 
-        <button type="submit" disabled={loading}>{loading ? 'Saving...' : selectedQuizId ? 'Update Quiz' : 'Create Quiz'}</button>
+        <button type="submit" className="button-primary" disabled={loading}>
+          {loading ? "Saving..." : selectedQuizId ? "Update Quiz" : "Create Quiz"}
+        </button>
       </form>
 
-      {/* ✅ List of user's quizzes with Edit & Delete options */}
       <div className="quiz-list">
-        <h3>My Quizzes</h3>
+        <h1>My Quizzes</h1>
         {quizzes.length > 0 ? (
           quizzes.map((quiz) => (
             <div key={quiz.id} className="quiz-item">
-              <h4>{quiz.title}</h4>
+              <h2>{quiz.title}</h2>
               <button onClick={() => handleEditQuiz(quiz)}>Edit</button>
-              <button onClick={() => handleDeleteQuiz(quiz.id)} style={{ backgroundColor: 'red' }}>Delete</button>
+              <button onClick={() => handleDeleteQuiz(quiz.id)}>Delete</button>
             </div>
           ))
         ) : (

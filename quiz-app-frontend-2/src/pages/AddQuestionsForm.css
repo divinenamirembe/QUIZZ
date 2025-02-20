@@ -1,0 +1,129 @@
+/* ✅ AddQuestionsForm Styles */
+.add-questions-container {
+  max-width: 600px;
+  width: 90%;
+  background: white;
+  padding: 25px;
+  border-radius: 10px;
+  box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+  text-align: center;
+  margin: auto;
+}
+
+/* ✅ Title */
+.add-questions-container h3 {
+  color: var(--secondary);
+  font-size: 22px;
+  margin-bottom: 15px;
+}
+
+/* ✅ Form Fields */
+.add-questions-form label {
+  display: block;
+  font-size: 16px;
+  color: var(--secondary);
+  font-weight: bold;
+  margin: 10px 0 5px;
+  text-align: left;
+}
+
+.add-questions-form input,
+.add-questions-form textarea,
+.add-questions-form select {
+  width: 100%;
+  padding: 10px;
+  border: 1px solid var(--accent);
+  border-radius: 5px;
+  font-size: 16px;
+  background: var(--background);
+  color: var(--secondary);
+  transition: border-color 0.3s ease;
+}
+
+.add-questions-form textarea {
+  height: 80px;
+  resize: none;
+}
+
+.add-questions-form input:focus,
+.add-questions-form textarea:focus,
+.add-questions-form select:focus {
+  border-color: var(--primary);
+  outline: none;
+}
+
+/* ✅ Image Preview */
+.image-preview {
+  width: 100px;
+  height: 100px;
+  margin-top: 10px;
+  border-radius: 5px;
+  object-fit: cover;
+  border: 2px solid var(--primary);
+}
+
+/* ✅ Buttons */
+.button-primary,
+.button-secondary {
+  width: 100%;
+  padding: 12px;
+  font-size: 16px;
+  border: none;
+  border-radius: 5px;
+  cursor: pointer;
+  transition: background 0.3s ease;
+  margin-top: 15px;
+}
+
+.button-primary {
+  background: var(--primary);
+  color: var(--secondary);
+}
+
+.button-primary:hover {
+  background: var(--secondary);
+  color: white;
+}
+
+.button-secondary {
+  background: var(--accent);
+  color: var(--secondary);
+}
+
+.button-secondary:hover {
+  background: var(--secondary);
+  color: white;
+}
+
+/* ✅ Submitted Questions */
+.submitted-questions {
+  margin-top: 20px;
+  padding: 15px;
+  background: var(--background);
+  border-radius: 8px;
+}
+
+.submitted-questions h4 {
+  color: var(--secondary);
+  font-size: 18px;
+  margin-bottom: 10px;
+}
+
+.submitted-question-item {
+  background: white;
+  padding: 10px;
+  border-radius: 5px;
+  box-shadow: 0 2px 5px rgba(0, 0, 0, 0.1);
+  margin-bottom: 10px;
+  text-align: left;
+}
+
+.submitted-question-item strong {
+  color: var(--secondary);
+}
+
+.submitted-question-item img {
+  width: 80px;
+  border-radius: 5px;
+  margin-top: 5px;
+}

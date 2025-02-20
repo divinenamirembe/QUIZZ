@@ -1,29 +1,150 @@
+/* ✅ General Container */
 .create-quiz-container {
-  display: flex;
+  max-width: 800px;
+  width: 90%;
+  background: white;
+  padding: 25px;
+  border-radius: 10px;
+  box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+  text-align: center;
+  margin: auto;
 }
 
+/* ✅ Menu Styling */
 .menu {
-  width: 250px;
-  background-color: #041697;
-  color: white;
-  padding: 20px;
   display: flex;
-  flex-direction: column;
-  gap: 10px;
+  justify-content: space-around;
+  margin-bottom: 20px;
 }
 
 .menu button {
-  background-color: #ffb703;
-  color: white;
-  padding: 10px;
+  background: var(--primary);
+  color: var(--secondary);
   border: none;
+  padding: 10px 15px;
+  border-radius: 5px;
   cursor: pointer;
+  transition: background 0.3s ease;
 }
 
 .menu button:hover {
-  background-color: #b2bbfe;
+  background: var(--secondary);
+  color: white;
 }
 
+/* ✅ Content Wrapper */
 .content {
-  flex: 1;
+  padding: 20px;
+}
+
+/* ✅ Quiz List */
+.quiz-list {
+  margin-top: 10px;
+  padding: 15px;
+  background: var(--background);
+  border-radius: 8px;
+}
+
+.quiz-list h4 {
+  color: var(--secondary);
+  font-size: 18px;
+  margin-bottom: 10px;
+}
+
+.quiz-item {
+  width: 100%;
+  padding: 10px;
+  background: white;
+  border: 1px solid var(--accent);
+  border-radius: 5px;
+  margin-bottom: 10px;
+  cursor: pointer;
+  transition: background 0.3s ease, transform 0.2s ease;
+}
+
+.quiz-item:hover {
+  background: var(--primary);
+  color: white;
+  transform: scale(1.05);
+}
+
+/* ✅ Participants List */
+.participants-list {
+  margin-top: 20px;
+  padding: 15px;
+  background: var(--background);
+  border-radius: 8px;
+}
+
+.participants-list h4 {
+  color: var(--secondary);
+  font-size: 18px;
+  margin-bottom: 10px;
+}
+
+.participants-list ul {
+  list-style: none;
+  padding: 0;
+}
+
+.participants-list li {
+  background: white;
+  padding: 10px;
+  border-radius: 5px;
+  margin-bottom: 8px;
+  box-shadow: 0 2px 5px rgba(0, 0, 0, 0.1);
+  text-align: left;
+}
+
+.participants-list li strong {
+  color: var(--secondary);
+}
+
+/* ✅ Results Section */
+.results-list {
+  margin-top: 20px;
+  padding: 15px;
+  background: var(--background);
+  border-radius: 8px;
+}
+
+.results-list h4 {
+  color: var(--secondary);
+  font-size: 18px;
+  margin-bottom: 10px;
+}
+
+/* ✅ Results Table */
+.results-table {
+  width: 100%;
+  border-collapse: collapse;
+  margin-top: 10px;
+}
+
+.results-table th, .results-table td {
+  border: 1px solid var(--accent);
+  padding: 10px;
+  text-align: center;
+}
+
+.results-table th {
+  background: var(--secondary);
+  color: white;
+}
+
+.results-table tr:nth-child(even) {
+  background: #f9f9f9;
+}
+
+.results-table tr:hover {
+  background: var(--primary);
+  color: white;
+}
+
+/* ✅ Loader & Empty States */
+.loading-message, .no-data-message {
+  font-size: 16px;
+  font-weight: bold;
+  color: var(--secondary);
+  margin-top: 10px;
 }

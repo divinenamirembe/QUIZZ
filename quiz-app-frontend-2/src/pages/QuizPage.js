@@ -1,5 +1,6 @@
 import React, { useState, useEffect } from "react";
 import { useParams, useNavigate } from "react-router-dom";
+import './QuizPage.css'
 
 const QuizPage = () => {
   const { quizId } = useParams();
@@ -190,60 +191,73 @@ const QuizPage = () => {
       ) : (
         <>
           <h2>{quiz.title}</h2>
-          <p>Time Left: {Math.floor(timeLeft / 60)}:{String(timeLeft % 60).padStart(2, '0')}</p>
+          <p className="timer">
+            Time Left: {Math.floor(timeLeft / 60)}:
+            {String(timeLeft % 60).padStart(2, "0")}
+          </p>
           {warning && <p style={{ color: "red" }}>⚠️ Time is almost up!</p>}
-
+  
           {quiz.questions.length > 0 && (
             <div className="question-container">
               <h3>Question {currentQuestionIndex + 1}:</h3>
               <p>{quiz.questions[currentQuestionIndex].question}</p>
-
+  
               {quiz.questions[currentQuestionIndex].image_url && (
                 <img
                   src={quiz.questions[currentQuestionIndex].image_url}
-                  alt="Question Image"
-                  style={{
-                    maxWidth: "150px",
-                    height: "auto",
-                    display: "block",
-                    margin: "10px auto",
-                    borderRadius: "10px",
-                  }}
+                  alt="Question"
+                  className="question-image"
                 />
               )}
-
+  
               <div className="options">
-                {Object.entries(quiz.questions[currentQuestionIndex].options).map(([key, value]) => (
-                  <label key={key} className="option-label">
-                    <input
-                      type="radio"
-                      name={`question-${quiz.questions[currentQuestionIndex].id}`}
-                      value={key}
-                      onChange={() => handleSelectAnswer(quiz.questions[currentQuestionIndex].id, key)}
-                      checked={selectedAnswers[quiz.questions[currentQuestionIndex].id] === key}
-                    />
-                    {key}: {value}
-                  </label>
-                ))}
+                {Object.entries(quiz.questions[currentQuestionIndex].options).map(
+                  ([key, value]) => (
+                    <label key={key} className="option-label">
+                      <input
+                        type="radio"
+                        name={`question-${quiz.questions[currentQuestionIndex].id}`}
+                        value={key}
+                        onChange={() =>
+                          handleSelectAnswer(
+                            quiz.questions[currentQuestionIndex].id,
+                            key
+                          )
+                        }
+                        checked={
+                          selectedAnswers[quiz.questions[currentQuestionIndex].id] === key
+                        }
+                      />
+                      {key}: {value}
+                    </label>
+                  )
+                )}
               </div>
               {feedback && <p className="feedback">{feedback}</p>}
             </div>
           )}
-
+  
           <div className="navigation">
-            <button onClick={handlePrevious} disabled={currentQuestionIndex === 0}>
+            <button
+              className="nav-button"
+              onClick={handlePrevious}
+              disabled={currentQuestionIndex === 0}
+            >
               Previous
             </button>
             {currentQuestionIndex < quiz.questions.length - 1 ? (
-              <button onClick={handleNext}>Next</button>
+              <button className="nav-button" onClick={handleNext}>Next</button>
             ) : (
-              <button onClick={handleSubmitQuiz}>Submit</button>
+              <button className="nav-button submit-button" onClick={handleSubmitQuiz}>
+                Submit
+              </button>
             )}
           </div>
         </>
       )}
     </div>
   );
+  
 };
 
 export default QuizPage;

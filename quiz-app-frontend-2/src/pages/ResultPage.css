@@ -1,0 +1,66 @@
+/* Centering the results page */
+.results-container {
+  max-width: 600px;
+  margin: 50px auto; /* Center the box with spacing */
+  padding: 30px;
+  background: #DADEFF; /* Light Blue Background */
+  border-radius: 12px;
+  box-shadow: 0px 4px 12px rgba(0, 0, 0, 0.15);
+  text-align: center;
+  border: 2px solid #B2BBFE; /* Soft Blue Border */
+}
+
+/* Style the heading */
+.results-container h1 {
+  font-size: 28px;
+  color: #041697; /* Deep Blue */
+  font-weight: bold;
+  margin-bottom: 15px;
+}
+
+/* General styling for text */
+.results-container p {
+  font-size: 18px;
+  color: #041697; /* Deep Blue */
+  margin-bottom: 10px;
+  font-weight: 500;
+}
+
+/* Highlight the final score */
+.results-container h2 {
+  font-size: 26px;
+  font-weight: bold;
+  color: #FFB703; /* Bright Yellow */
+  margin-top: 20px;
+}
+
+/* Style the performance comment */
+.results-container p[style*="italic"] {
+  margin-top: 20px;
+  font-weight: bold;
+  font-size: 18px;
+  color: #041697; /* Deep Blue */
+  background-color: rgba(178, 187, 254, 0.3); /* Light Accent Background */
+  padding: 10px;
+  border-radius: 8px;
+  display: inline-block;
+}
+
+/* Style the back button */
+.results-container button {
+  background-color: #041697; /* Deep Blue */
+  color: white;
+  font-size: 18px;
+  padding: 12px 22px;
+  border: none;
+  border-radius: 8px;
+  cursor: pointer;
+  margin-top: 25px;
+  transition: all 0.3s ease-in-out;
+  font-weight: bold;
+}
+
+.results-container button:hover {
+  background-color: #FFB703; /* Bright Yellow */
+  color: #041697; /* Deep Blue Text */
+}

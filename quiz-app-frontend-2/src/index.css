@@ -1,4 +1,7 @@
 /* ✅ 1. Reset Styles (Removes default browser padding, margins) */
+
+/* Add this to index.css */
+
 * {
   margin: 0;
   padding: 0;
@@ -16,7 +19,7 @@
 
 /* ✅ 3. Body Styles */
 body {
-  background-color: var(--background);
+  background-color: white;
   color: var(--secondary);
   padding: 20px;
 }

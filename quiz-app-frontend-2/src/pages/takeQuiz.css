@@ -1,115 +1,138 @@
-/* ✅ Take Quiz Page Styles */
+/* 🎨 General Container */
 .take-quiz-container {
-  max-width: 800px;
-  margin: 40px auto;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
   padding: 30px;
-  background-color: var(--background); /* Light blue */
-  border-radius: 8px;
-  box-shadow: 0px 4px 10px rgba(0, 0, 0, 0.1);
-  text-align: center;
+  font-family: 'Arial', sans-serif;
+  background-color: #DADEFF; /* Light Blue Background */
+  min-height: 100vh;
 }
 
-/* ✅ Header Styling */
-.take-quiz-container h3 {
-  color: var(--secondary); /* Deep Blue */
-  font-size: 26px;
-  margin-bottom: 15px;
-}
-
-/* ✅ Menu Buttons */
-.menu {
+/* 🎯 Two-Column Layout */
+.quiz-layout {
   display: flex;
-  justify-content: center;
-  gap: 15px;
-  margin-bottom: 20px;
+  justify-content: space-between;
+  width: 90%;
+  max-width: 1200px;
+  gap: 30px;
 }
 
-.menu button {
-  padding: 10px 15px;
-  background-color: var(--primary); /* Bright Yellow */
-  color: var(--secondary); /* Deep Blue */
-  font-size: 16px;
-  border: none;
-  border-radius: 5px;
-  cursor: pointer;
-  transition: all 0.3s ease;
-}
-
-.menu button:hover {
-  background-color: var(--accent); /* Soft Blue */
-}
-
-/* ✅ Search Input */
-.menu input {
-  padding: 8px;
-  width: 250px;
-  border: 1px solid var(--secondary);
-  border-radius: 5px;
-  outline: none;
-}
-
-/* ✅ Category Buttons */
-.category-buttons {
-  display: flex;
-  flex-wrap: wrap;
-  justify-content: center;
-  gap: 10px;
-  margin-top: 15px;
-}
-
-.category-buttons button {
-  background-color: var(--secondary); /* Deep Blue */
-  color: white;
-  padding: 10px 15px;
-  border: none;
-  border-radius: 5px;
-  cursor: pointer;
-  transition: all 0.3s ease;
-}
-
-.category-buttons button:hover {
-  background-color: var(--accent); /* Soft Blue */
-}
-
-/* ✅ Quiz List */
-.quiz-list,
-.taken-quiz-list {
+/* 🟢 Left Section: Navigation */
+.quiz-menu {
+  flex: 1;
+  max-width: 250px;
   display: flex;
   flex-direction: column;
   gap: 15px;
-  margin-top: 15px;
 }
 
-.quiz-item {
-  background-color: white;
-  padding: 15px;
-  border-radius: 8px;
-  box-shadow: 0px 2px 5px rgba(0, 0, 0, 0.1);
-  text-align: left;
-}
-
-.quiz-item h4 {
-  color: var(--secondary);
-  font-size: 20px;
-}
-
-.quiz-item p {
-  color: var(--secondary);
-  font-size: 16px;
-  margin: 5px 0;
-}
-
-.quiz-item button {
-  padding: 8px 12px;
-  background-color: var(--primary);
-  color: var(--secondary);
-  font-size: 14px;
-  border: none;
+/* 🔍 Search Input */
+.search-input {
+  padding: 10px;
+  border: 2px solid #041697; /* Deep Blue */
   border-radius: 5px;
+  font-size: 16px;
+}
+
+/* 🔘 Navigation Buttons */
+.nav-button {
+  background-color: #041697; /* Deep Blue */
+  color: white;
+  border: none;
+  padding: 12px;
+  border-radius: 5px;
+  font-size: 16px;
+  cursor: pointer;
+  transition: background 0.3s ease;
+}
+
+.nav-button:hover {
+  background-color: #B2BBFE; /* Soft Blue */
+  color: #041697;
+}
+
+/* 🔵 Right Section: Content */
+.quiz-content {
+  flex: 2;
+  background: white;
+  padding: 20px;
+  border-radius: 10px;
+  box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+}
+
+/* 🏷️ Category Buttons */
+.category-button {
+  background-color: #FFB703; /* Yellow */
+  color: #041697;
+  border: none;
+  padding: 10px;
+  margin: 5px;
+  border-radius: 5px;
+  font-size: 16px;
   cursor: pointer;
   transition: all 0.3s ease;
 }
 
-.quiz-item button:hover {
-  background-color: var(--accent);
+.category-button:hover {
+  background-color: #B2BBFE; /* Soft Blue */
+}
+
+/* 📜 Quiz Items */
+.quiz-item {
+  background: #f9f9f9;
+  padding: 15px;
+  border-radius: 8px;
+  margin-bottom: 10px;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  text-align: center;
+  box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+}
+
+/* 🚀 Join Quiz Button */
+.join-button {
+  background-color: #041697;
+  color: white;
+  border: none;
+  padding: 10px;
+  border-radius: 5px;
+  cursor: pointer;
+  font-size: 14px;
+}
+
+.join-button:hover {
+  background-color: #FFB703;
+  color: #041697;
+}
+
+/* 🏆 View Results Button */
+.view-results-button {
+  background-color: #FFB703;
+  color: #041697;
+  border: none;
+  padding: 10px;
+  border-radius: 5px;
+  cursor: pointer;
+  font-size: 14px;
+  margin-top: 10px;
+}
+
+.view-results-button:hover {
+  background-color: #B2BBFE;
+  color: #041697;
+}
+
+/* 📱 Responsive Design */
+@media (max-width: 768px) {
+  .quiz-layout {
+    flex-direction: column;
+    align-items: center;
+  }
+
+  .quiz-menu {
+    max-width: 100%;
+    text-align: center;
+  }
 }

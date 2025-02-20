@@ -1,13 +1,12 @@
-import './App.css';
+import './index.css';
 import React from "react";
-import { BrowserRouter as Router, Routes, Route, Navigate } from "react-router-dom";
+import { BrowserRouter as Router, Routes, Route} from "react-router-dom";
 import SignUp from "./pages/signUp.js";
 import Login from './pages/login.js'; 
 import LandingPage from './pages/LandingPage';
 import TakeQuiz from './pages/TakeQuiz';
 import CreateQuiz from './pages/CreateQuiz';
 import QuizPage from './pages/QuizPage';
-import QuizQuestionPage from './pages/QuizQuestionPage';
 import ResultsPage from './pages/ResultsPage.js';
 import CreateQuizForm from './pages/CreateQuizForm';
 import AddQuestionsForm from './pages/AddQuestionsForm';
@@ -27,7 +26,7 @@ function App() {
 
         {/* Quiz Routes */}
        
-        <Route path="/quiz/questions/:questionNumber" element={<QuizQuestionPage />} />
+        
         <Route path="/results/:quizId" element={<ResultsPage />} />
         <Route path="/create-quiz-form" element={<CreateQuizForm />} />
         <Route path="/add-questions/:quizId" element={<AddQuestionsForm />} />
