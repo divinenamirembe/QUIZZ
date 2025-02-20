@@ -1,6 +1,6 @@
 import React, { useState, useEffect } from 'react';
 import { useNavigate } from 'react-router-dom';
-import './TakeQuiz.css'
+import './takeQuiz.css'
 
 const TakeQuiz = () => {
   const [categories, setCategories] = useState([]);
